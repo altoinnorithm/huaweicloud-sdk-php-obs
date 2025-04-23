@@ -27,6 +27,7 @@ class CheckoutStream implements StreamInterface
     use StreamDecoratorTrait;
     private $expectedLength;
     private $readedCount = 0;
+    private array $properties = [];
 
     public function __construct(StreamInterface $stream, $expectedLength)
     {
@@ -34,7 +35,12 @@ class CheckoutStream implements StreamInterface
         $this->expectedLength = $expectedLength;
     }
 
-    public function getContents(): string
+    public function __set(string $name, mixed $value)
+    {
+        $this->properties[$name] = $value;
+    }
+
+    public function getContents()
     {
         $contents = $this->stream->getContents();
         $length = strlen($contents);
